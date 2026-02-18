@@ -42,8 +42,9 @@ async def send_ntfy_thought(x_api_key: str | None = Header(None)):
         # We send JSON to ntfy to support emojis (headers only support ASCII/Latin-1)
         try:
             resp = await client.post(
-                f"{NTFY_URL}/{NTFY_TOPIC}",
+                f"{NTFY_URL}",
                 json={
+                    "topic": NTFY_TOPIC,
                     "message": text,
                     "title": "Smart ❤️",  # Supports emoji in JSON
                     "priority": "high",
