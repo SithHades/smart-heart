@@ -39,16 +39,15 @@ async def send_ntfy_thought(x_api_key: str | None = Header(None)):
     text, emoji = random.choice(MESSAGES)
 
     async with httpx.AsyncClient() as client:
-        # We send headers to ntfy to control the notification's look
+        # We send JSON to ntfy to support emojis (headers only support ASCII/Latin-1)
         try:
             resp = await client.post(
                 f"{NTFY_URL}/{NTFY_TOPIC}",
-                data=text,
-                headers={
-                    "Title": "Smart ❤️",
-                    "Priority": "high",  # Makes it pop up immediately
-                    "Tags": emoji,  # Adds an emoji to the notification icon
-                    # "Click": "https://yourdomain.com",  # Optional: click to open a site
+                json={
+                    "message": text,
+                    "title": "Smart ❤️",  # Supports emoji in JSON
+                    "priority": "high",
+                    "tags": [emoji],  # Supports emoji in JSON
                 },
             )
             resp.raise_for_status()
